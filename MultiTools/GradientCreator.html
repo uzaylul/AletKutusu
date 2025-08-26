@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gradient Oluşturucu (Dark Mode) + PNG İndirici + Çözünürlük</title>
+<style>
+  body {
+    background-color: #121212;
+    color: #ddd;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0; padding: 2rem;
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh;
+  }
+  h1 {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    max-width: 700px;
+    margin-bottom: 1.5rem;
+  }
+  label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+    color: #ccc;
+  }
+  input[type="color"], select, input[type="number"] {
+    margin-top: 0.4rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+    background-color: #1e1e1e;
+    color: #ddd;
+  }
+  #preview {
+    width: 512px;
+    height: 200px;
+    border-radius: 12px;
+    border: 1px solid #444;
+    background: linear-gradient(90deg, #ff0000, #0000ff);
+    margin-bottom: 1rem;
+  }
+  #cssCode {
+    width: 512px;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    padding: 1rem;
+    font-family: monospace;
+    color: #4caf50;
+    user-select: all;
+    word-wrap: break-word;
+  }
+  button {
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem;
+    margin-right: 10px;
+  }
+  button:hover {
+    background-color: #1b5e20;
+  }
+  .button-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+</style>
+</head>
+<body>
+
+<h1>🌈 Gradient Oluşturucu (Dark Mode) + PNG İndirici + Çözünürlük</h1>
+
+<div class="controls">
+  <label>Renk 1
+    <input type="color" id="color1" value="#ff0000" />
+  </label>
+  <label>Renk 2
+    <input type="color" id="color2" value="#0000ff" />
+  </label>
+  <label>Gradient Tipi
+    <select id="gradientType">
+      <option value="linear">Linear</option>
+      <option value="radial">Radial</option>
+    </select>
+  </label>
+  <label>Yön (Derece, sadece linear için)
+    <input type="number" id="angle" value="90" min="0" max="360" />
+  </label>
+  <label>PNG Genişlik (px)
+    <input type="number" id="pngWidth" value="512" min="100" max="2000" />
+  </label>
+  <label>PNG Yükseklik (px)
+    <input type="number" id="pngHeight" value="200" min="100" max="2000" />
+  </label>
+</div>
+
+<div id="preview"></div>
+
+<pre id="cssCode"></pre>
+
+<div class="button-group">
+  <button id="copyBtn">📋 CSS Kodunu Kopyala</button>
+  <button id="downloadPngBtn">🖼️ PNG Olarak İndir</button>
+</div>
+
+<script>
+  const color1 = document.getElementById('color1');
+  const color2 = document.getElementById('color2');
+  const gradientType = document.getElementById('gradientType');
+  const angle = document.getElementById('angle');
+  const preview = document.getElementById('preview');
+  const cssCode = document.getElementById('cssCode');
+  const copyBtn = document.getElementById('copyBtn');
+  const downloadPngBtn = document.getElementById('downloadPngBtn');
+  const pngWidthInput = document.getElementById('pngWidth');
+  const pngHeightInput = document.getElementById('pngHeight');
+
+  function updateGradient() {
+    const c1 = color1.value;
+    const c2 = color2.value;
+    const type = gradientType.value;
+    const deg = angle.value;
+
+    let gradientCss = '';
+    if(type === 'linear') {
+      gradientCss = `linear-gradient(${deg}deg, ${c1}, ${c2})`;
+      angle.disabled = false;
+    } else {
+      gradientCss = `radial-gradient(circle, ${c1}, ${c2})`;
+      angle.disabled = true;
+    }
+
+    preview.style.background = gradientCss;
+    cssCode.textContent = `background: ${gradientCss};`;
+  }
+
+  function downloadPNG() {
+    let width = parseInt(pngWidthInput.value);
+    let height = parseInt(pngHeightInput.value);
+
+    if(isNaN(width) || width < 100) width = 512;
+    if(isNaN(height) || height < 100) height = 200;
+
+    const c1 = color1.value;
+    const c2 = color2.value;
+    const type = gradientType.value;
+    const deg = angle.value;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+
+    if(type === 'linear') {
+      const angleRad = (deg % 360) * Math.PI / 180;
+      const x0 = width/2 - Math.cos(angleRad) * width/2;
+      const y0 = height/2 - Math.sin(angleRad) * height/2;
+      const x1 = width/2 + Math.cos(angleRad) * width/2;
+      const y1 = height/2 + Math.sin(angleRad) * height/2;
+
+      const gradient = ctx.createLinearGradient(x0, y0, x1, y1);
+      gradient.addColorStop(0, c1);
+      gradient.addColorStop(1, c2);
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, width, height);
+    } else {
+      const gradient = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, Math.max(width, height)/2);
+      gradient.addColorStop(0, c1);
+      gradient.addColorStop(1, c2);
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, width, height);
+    }
+  canvas.toBlob(function(blob) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'gradient.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+  }
+
+  [color1, color2, gradientType, angle].forEach(el => {
+    el.addEventListener('input', updateGradient);
+  });
+
+  copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(cssCode.textContent).then(() => {
+      copyBtn.textContent = '✅ Kopyalandı!';
+      setTimeout(() => copyBtn.textContent = '📋 CSS Kodunu Kopyala', 1500);
+    });
+  });
+
+  downloadPngBtn.addEventListener('click', downloadPNG);
+
+  updateGradient();
+</script>
+
+</body>
+</html>

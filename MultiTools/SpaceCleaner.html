@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metin Temizleyici</title>
+    <style>
+        /* Açık Mod Stilleri (Varsayılan) */
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 80%;
+            max-width: 600px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            resize: both;
+            font-family: monospace;
+            font-size: 14px;
+            color: #333;
+            background-color: #fff;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        #sonuc {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #eee;
+            font-family: monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #333;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        #sonucBasligi {
+            font-weight: bold;
+            color: #555;
+            margin-top: 15px;
+        }
+
+        /* Koyu Mod Stilleri */
+        body.dark-mode {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+        }
+
+        body.dark-mode h1 {
+            color: #d4d4d4;
+        }
+
+        body.dark-mode .container {
+            background-color: #252525;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        body.dark-mode label {
+            color: #a6a6a6;
+        }
+
+        body.dark-mode textarea {
+            color: #d4d4d4;
+            background-color: #333;
+            border-color: #555;
+        }
+
+        body.dark-mode #sonuc {
+            color: #d4d4d4;
+            background-color: #444;
+            border-color: #666;
+        }
+
+        body.dark-mode #sonucBasligi {
+            color: #a6a6a6;
+        }
+
+        /* Koyu Mod Geçiş Butonu Stili */
+        #koyuModButonu {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        #koyuModButonu:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <h1>Metin Boşluk Temizleyici</h1>
+    <button id="koyuModButonu">Açık Moda Geç</button>
+    <div class="container">
+        <label for="metinAlani">Metni Yapıştırın:</label>
+        <textarea id="metinAlani"></textarea>
+        <h2 id="sonucBasligi">İşlenmiş Metin:</h2>
+        <div id="sonuc"></div>
+    </div>
+
+    <script>
+        const metinAlani = document.getElementById('metinAlani');
+        const sonucDiv = document.getElementById('sonuc');
+        const body = document.body;
+        const koyuModButonu = document.getElementById('koyuModButonu');
+
+        metinAlani.addEventListener('input', function() {
+            const girilenMetin = metinAlani.value;
+            // Önce ve sonraki boşlukları temizle, ardından birden fazla boşluğu tek boşluğa indir
+            const temizlenmisMetin = girilenMetin.trim().replace(/\s+/g, ' ');
+            sonucDiv.textContent = temizlenmisMetin;
+        });
+
+        koyuModButonu.addEventListener('click', function() {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                koyuModButonu.textContent = 'Açık Moda Geç';
+            } else {
+                koyuModButonu.textContent = 'Koyu Moda Geç';
+            }
+        });
+    </script>
+</body>
+
+</html>

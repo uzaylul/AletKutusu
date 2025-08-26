@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pomodoro Zamanlayıcı</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Pomodoro Zamanlayıcı</h1>
+      <button id="theme-toggle" aria-label="Tema Değiştir">🌙</button>
+    </header>
+
+    <section id="timer-section">
+      <div id="mode-buttons">
+        <button class="mode-btn" data-mode="pomodoro">Pomodoro</button>
+        <button class="mode-btn" data-mode="shortBreak">Kısa Mola</button>
+        <button class="mode-btn" data-mode="longBreak">Uzun Mola</button>
+      </div>
+
+      <div class="timer-container">
+        <svg class="progress-ring" width="200" height="200">
+          <circle class="progress-ring__circle" stroke="tomato" stroke-width="8" fill="transparent" r="90" cx="100" cy="100"></circle>
+        </svg>
+        <div id="time-display">25:00</div>
+      </div>
+
+      <div id="controls">
+        <button id="start-btn">Başlat</button>
+        <button id="pause-btn">Duraklat</button>
+        <button id="reset-btn">Sıfırla</button>
+        <button id="mute-toggle" aria-label="Sesi Aç/Kapat">🔔</button>
+      </div>
+    </section>
+
+    <section id="todo-section">
+      <h2>Görevler</h2>
+      <form id="todo-form">
+        <input type="text" id="todo-input" placeholder="Yeni görev ekle..." aria-label="Yeni görev ekle" />
+        <button type="submit">Ekle</button>
+      </form>
+      <ul id="todo-list"></ul>
+    </section>
+
+    <section id="stats-section">
+      <h2>İstatistikler</h2>
+      <p>Bugün tamamlanan Pomodoro: <span id="pomodoro-count">0</span></p>
+      <canvas id="stats-chart"></canvas>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
