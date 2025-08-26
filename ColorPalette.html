@@ -1,0 +1,306 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tema Renk Paleti Oluşturucu</title>
+  <style>
+    :root {
+      --bg-light: #f0f2f5;
+      --text-light: #333;
+      --input-bg-light: #fff;
+      --input-border-light: #ccc;
+      --btn-bg-light: #0078d7;
+      --btn-bg-hover-light: #005fa3;
+
+      --bg-dark: #121212;
+      --text-dark: #e0e0e0;
+      --input-bg-dark: #1e1e1e;
+      --input-border-dark: #444;
+      --btn-bg-dark: #1a73e8;
+      --btn-bg-hover-dark: #155ab6;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--bg-light);
+      color: var(--text-light);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: inherit;
+    }
+
+    .input-area {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    input[type="text"] {
+      padding: 8px;
+      font-size: 1rem;
+      width: 120px;
+      border-radius: 6px;
+      border: 1px solid var(--input-border-light);
+      background: var(--input-bg-light);
+      color: var(--text-light);
+      text-transform: uppercase;
+      transition: background 0.3s, color 0.3s, border-color 0.3s;
+    }
+
+    body.dark input[type="text"] {
+      background: var(--input-bg-dark);
+      border-color: var(--input-border-dark);
+      color: var(--text-dark);
+    }
+
+    button {
+      padding: 8px 16px;
+      border: none;
+      background-color: var(--btn-bg-light);
+      color: white;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: var(--btn-bg-hover-light);
+    }
+
+    body.dark button {
+      background-color: var(--btn-bg-dark);
+    }
+
+    body.dark button:hover {
+      background-color: var(--btn-bg-hover-dark);
+    }
+
+    .palette {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 600px;
+    }
+
+    .color-box {
+      width: 100px;
+      height: 120px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 600;
+      position: relative;
+      user-select: none;
+      transition: box-shadow 0.3s ease;
+    }
+
+    body.dark .color-box {
+      box-shadow: 0 0 8px rgba(255,255,255,0.2);
+    }
+
+    .color-code {
+      margin-top: 8px;
+      font-family: monospace;
+      background: rgba(0,0,0,0.25);
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.3s ease;
+    }
+
+    body.dark .color-code {
+      background: rgba(255,255,255,0.15);
+      color: #eee;
+    }
+
+    .tooltip {
+      position: absolute;
+      top: 10px;
+      background: #222;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      user-select: none;
+      z-index: 10;
+    }
+
+    .tooltip.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Toggle Button */
+    .toggle-container {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      color: inherit;
+    }
+
+    .toggle-switch {
+      width: 50px;
+      height: 26px;
+      background-color: #ccc;
+      border-radius: 15px;
+      position: relative;
+      transition: background-color 0.3s ease;
+    }
+
+    .toggle-switch::before {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background-color: white;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+
+    .toggle-switch.active {
+      background-color: #0078d7;
+    }
+
+    .toggle-switch.active::before {
+      transform: translateX(24px);
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="toggle-container" onclick="toggleDarkMode()">
+    <div id="toggleSwitch" class="toggle-switch"></div>
+    <span>Koyu Mod</span>
+  </div>
+
+  <h1>Tema Renk Paleti Oluşturucu</h1>
+  <p>Renk kodlarını girerek, harmonik renk paletleri oluşturun.</p>
+
+  <div class="input-area">
+    <input type="text" id="color1" placeholder="#RRGGBB" maxlength="7" />
+    <input type="text" id="color2" placeholder="#RRGGBB" maxlength="7" />
+    <input type="text" id="color3" placeholder="#RRGGBB" maxlength="7" />
+    <input type="text" id="color4" placeholder="#RRGGBB" maxlength="7" />
+    <input type="text" id="color5" placeholder="#RRGGBB" maxlength="7" />
+    <button onclick="generatePalette()">Paleti Oluştur</button>
+  </div>
+
+  <div class="palette" id="palette"></div>
+
+  <script>
+  const body = document.body;
+  const toggleSwitch = document.getElementById('toggleSwitch');
+
+  // Sayfa yüklendiğinde koyu modu aktif et
+  window.addEventListener('DOMContentLoaded', () => {
+    body.classList.add('dark');
+    toggleSwitch.classList.add('active');
+  });
+
+  function toggleDarkMode() {
+    body.classList.toggle('dark');
+    toggleSwitch.classList.toggle('active');
+  }
+
+  function isValidHex(color) {
+    return /^#([0-9A-F]{6})$/i.test(color);
+  }
+
+  function adjustColor(hex, amount) {
+    let col = hex.replace('#','');
+    let num = parseInt(col, 16);
+    let r = (num >> 16) + amount;
+    let g = ((num >> 8) & 0x00FF) + amount;
+    let b = (num & 0x0000FF) + amount;
+
+    r = Math.min(255, Math.max(0, r));
+    g = Math.min(255, Math.max(0, g));
+    b = Math.min(255, Math.max(0, b));
+
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+  }
+
+  function generatePalette() {
+    const paletteDiv = document.getElementById('palette');
+    paletteDiv.innerHTML = '';
+
+    const inputs = [...document.querySelectorAll('.input-area input[type="text"]')];
+    const baseColors = inputs.map(input => input.value.trim().toUpperCase()).filter(isValidHex);
+
+    if (baseColors.length === 0) {
+      alert("Lütfen en az bir geçerli renk kodu (#RRGGBB formatında) girin.");
+      return;
+    }
+
+    baseColors.forEach(base => {
+      const shifts = [0, 30, -30];
+      shifts.forEach(amount => {
+        const color = amount === 0 ? base : adjustColor(base, amount);
+        const box = document.createElement('div');
+        box.className = 'color-box';
+        box.style.backgroundColor = color;
+
+        const code = document.createElement('div');
+        code.className = 'color-code';
+        code.textContent = color;
+
+        code.onclick = () => {
+          navigator.clipboard.writeText(color).then(() => {
+            showTooltip(box, "Kopyalandı!");
+          });
+        };
+
+        box.appendChild(code);
+        paletteDiv.appendChild(box);
+      });
+    });
+  }
+
+  function showTooltip(parent, message) {
+    let tooltip = parent.querySelector('.tooltip');
+    if (!tooltip) {
+      tooltip = document.createElement('div');
+      tooltip.className = 'tooltip';
+      parent.appendChild(tooltip);
+    }
+    tooltip.textContent = message;
+    tooltip.classList.add('show');
+    setTimeout(() => tooltip.classList.remove('show'), 1500);
+  }
+</script>
+
+</body>
+</html>

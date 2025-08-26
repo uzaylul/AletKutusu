@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Geri Sayım Sayacı - Etkinlik</title>
+  <style>
+    /* Koyu mod tema */
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      padding: 20px;
+      user-select: none;
+    }
+    h1 {
+      font-weight: 700;
+      margin-bottom: 0.3em;
+      color: #81c784;
+    }
+    #countdown {
+      font-size: 3em;
+      font-weight: 600;
+      margin: 20px 0;
+      letter-spacing: 2px;
+    }
+    #message {
+      font-size: 1.3em;
+      color: #90caf9;
+      margin-top: 15px;
+      min-height: 2em;
+      font-style: italic;
+    }
+    input[type="date"] {
+      background-color: #1e1e1e;
+      border: 2px solid #81c784;
+      border-radius: 6px;
+      color: #e0e0e0;
+      font-size: 1em;
+      padding: 10px 15px;
+      margin-top: 15px;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    input[type="date"]:focus {
+      border-color: #4caf50;
+    }
+    footer {
+      position: fixed;
+      bottom: 10px;
+      font-size: 0.9em;
+      color: #777;
+      user-select: text;
+    }
+    /* Responsive */
+    @media(max-width: 480px) {
+      #countdown {
+        font-size: 2em;
+      }
+      #message {
+        font-size: 1em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Geri Sayım Sayacı</h1>
+  <label for="eventDate">Etkinlik Tarihini Seçin:</label>
+  <input type="date" id="eventDate" aria-label="Etkinlik Tarihi" />
+  
+  <div id="countdown">Tarih seçiniz</div>
+  <div id="message"></div>
+
+  <footer>© 2025 Onur Çelik - Motivasyonla zamanı yakala!</footer>
+
+  <script>
+    // Motivasyonel mesajlar dizisi
+    const messages = [
+      "Sabır, başarının anahtarıdır.",
+      "Her gün yeni bir fırsattır.",
+      "Başarı, küçük adımların toplamıdır.",
+      "Zamanı iyi kullan, hayatın tadını çıkar.",
+      "Her saniye kıymetlidir, hayallerine yaklaş!",
+      "Geri sayım başladı, güç sende!",
+      "Azimle ilerle, engeller sadece duraktır.",
+      "Kalan zamanı verimli kullan, ışığın parlasın.",
+      "Unutma: En karanlık an, şafaktan öncedir.",
+      "Zaman sana karşı değil, sen zamanla dans et."
+    ];
+
+    const countdownEl = document.getElementById('countdown');
+    const messageEl = document.getElementById('message');
+    const eventDateInput = document.getElementById('eventDate');
+
+    // Fonksiyon: kalan süreyi hesapla ve göster
+    function updateCountdown(targetDate) {
+      const now = new Date();
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        countdownEl.textContent = "Etkinlik başladı!";
+        messageEl.textContent = "Haydi, şimdi zamanı yakala ve en iyisini yap!";
+        return false;
+      }
+
+      // Gün, saat, dakika, saniye hesapla
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      countdownEl.textContent = 
+        `${days} gün ${hours.toString().padStart(2,'0')}:` +
+        `${minutes.toString().padStart(2,'0')}:` +
+        `${seconds.toString().padStart(2,'0')}`;
+
+      // Her gün farklı bir motivasyon mesajı gösterelim
+      const msgIndex = days % messages.length;
+      messageEl.textContent = messages[msgIndex];
+
+      return true;
+    }
+
+    let countdownInterval;
+
+    eventDateInput.addEventListener('change', () => {
+      clearInterval(countdownInterval);
+      const selectedDate = new Date(eventDateInput.value + 'T00:00:00');
+
+      if (isNaN(selectedDate)) {
+        countdownEl.textContent = "Geçerli bir tarih girin.";
+        messageEl.textContent = "";
+        return;
+      }
+
+      // Hemen güncelle ve sonra her saniye güncelle
+      if (updateCountdown(selectedDate)) {
+        countdownInterval = setInterval(() => {
+          if (!updateCountdown(selectedDate)) {
+            clearInterval(countdownInterval);
+          }
+        }, 1000);
+      }
+    });
+  </script>
+</body>
+</html>
